@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 require('./models/Meetings');
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect('mongodb://localhost/meetings');
 
 var routes = require('./routes/index');
 
