@@ -3,14 +3,18 @@ meetingsApp.controller("AddMeetingController", function($scope, $http, $location
 		return $routeParams.meetingId == null
 	}
 
-	function addInterview(starttime,endtime,userlist,users,usermap,Interviews){
+	 function addInterview(starttime,endtime,userlist,users,usermap,Interviews){
 	    var can = true;
-	    for(var x in userlist)
+	    for(var z=0;z<userlist.length;z++)
 	    {
+			var x=userlist[z];
 	    	console.log(users);
-	    	console.log(x);
-	      let userid=users[x];
-	      console.log(Object.keys(users));
+	    	console.log(z);
+			let userid=users[x];
+			console.log(x);
+			console.log(userid);
+		  console.log(Object.keys(users));
+		  console.log(typeof(x));
 	      if(usermap[userid]){
 	        for(var i=0;i<usermap[userid].length;i++){
 	          console.log("Start time of other meeting:",(Interviews[usermap[userid][i]])["starttime"]);
@@ -38,6 +42,7 @@ meetingsApp.controller("AddMeetingController", function($scope, $http, $location
 		$scope.headerText = "Add Meeting";
 		$scope.startTimeObj = new Date();
 		$scope.endTimeObj = new Date();
+		$scope.endTimeObj.setMinutes($scope.endTimeObj.getMinutes()+30);
 
 		$scope.save = function($event) {
 			var meeting = {};
@@ -46,7 +51,13 @@ meetingsApp.controller("AddMeetingController", function($scope, $http, $location
 			meeting.start = $scope.startTimeObj.toISOString();
 			meeting.end = $scope.endTimeObj.toISOString();
 			meeting.invitees = $scope.invitees.map(a => a.name);
-			let users = {};
+			if(meeting.invitees.length<2)
+			{
+				toastr.error("Number of invitees cannot be less than two.");
+			}
+			else
+			{
+				let users = {};
 			let usermap={};
 			let Interviews={};
 			$http({
@@ -94,6 +105,8 @@ meetingsApp.controller("AddMeetingController", function($scope, $http, $location
 			else {
 				toastr.error("Timings are clashing with existing meetings for invitees.");
 			}
+			}
+			
 		}
 
 	} else {
